@@ -86,21 +86,21 @@ header {
 	margin: 0 0 0 5%;
 	position: absolute;
 }
-.close{
+.close {
 	@extend .hamburger;
 }
-.hide-mobile{
+.hide-mobile {
 	display: block;
 }
 @include phone {
 	.hamburger {
 		display: block;
 	}
-	.close{
+	.close {
 		display: block;
 		z-index: 2;
-		> img{
-			content:url(../images/icon-close.svg)
+		> img {
+			content: url(../images/icon-close.svg);
 		}
 	}
 	.responsive.responsive {
@@ -109,23 +109,36 @@ header {
 		position: absolute;
 		top: -#{get-spacing(margin)};
 		bottom: auto;
-		
+
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
 		margin-top: 0;
 		background-color: white;
 		font-weight: 700;
-		flex-wrap: wrap-reverse;
-		
-		> a{
+		flex-wrap: wrap;
+
+		> a {
 			color: black;
-			flex: 1;
+			flex: 0;
 			min-width: 50px;
-			margin-left: 70px;
+
+			&:first-child {
+				margin-left: 70px;
+			}
+
+			@media only screen and (max-width: 450px) {
+				flex-basis: 25%;
+			}
+			@media only screen and (max-width: 315px) {
+				flex-basis: 50%;
+				&:first-child {
+					margin-left: 0;
+				}
+			}
 		}
 	}
-	.hide-mobile{
+	.hide-mobile {
 		display: none;
 	}
 }
