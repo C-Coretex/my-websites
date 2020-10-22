@@ -116,9 +116,13 @@ header {
 		margin-top: 0;
 		background-color: white;
 		font-weight: 700;
+		flex-wrap: wrap-reverse;
 		
 		> a{
 			color: black;
+			flex: 1;
+			min-width: 50px;
+			margin-left: 70px;
 		}
 	}
 	.hide-mobile{
