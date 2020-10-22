@@ -1,0 +1,345 @@
+@import url("https://fonts.googleapis.com/css2?family=Spartan:wght@500;600;700&display=swap");
+
+$spacing: (
+	padding: 15px,
+	margin: 20px,
+	word-spacing: 7px,
+);
+
+@function get-spacing($spacing-type) {
+	@return map-get($spacing, $spacing-type);
+}
+
+$phone: 920px;
+
+@mixin phone {
+	@media (max-width: #{$phone}) {
+		@content;
+	}
+}
+@mixin desktop {
+	@media (min-width: 930px) {
+		@content;
+	}
+}
+
+//General
+html,
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+body {
+	font-family: "Spartan", sans-serif;
+	margin: 0;
+}
+a {
+	text-decoration: none;
+	color: black;
+}
+
+body > * {
+	margin: get-spacing(margin);
+}
+
+h1 {
+	font-weight: 700;
+	font-size: 2.2rem;
+}
+h2 {
+	font-weight: 700;
+	font-size: 1.2rem;
+	letter-spacing: 3px;
+	margin-bottom: 20px;
+}
+p {
+	font-weight: 500;
+	color: hsl(0, 0%, 63%);
+	line-height: 25px;
+	font-size: 12px;
+}
+*::selection {
+	background-color: black;
+	color: white;
+}
+
+img {
+	object-fit: cover;
+}
+
+//Header
+header {
+	position: absolute;
+	height: fit-content;
+	@include phone {
+		width: 100%;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	z-index: 2;
+}
+.hamburger {
+	height: auto;
+	width: 30px;
+	display: none;
+	margin: 0 0 0 5%;
+	position: absolute;
+}
+.close{
+	@extend .hamburger;
+}
+.hide-mobile{
+	display: block;
+}
+@include phone {
+	.hamburger {
+		display: block;
+	}
+	.close{
+		display: block;
+		z-index: 2;
+		> img{
+			content:url(../images/icon-close.svg)
+		}
+	}
+	.responsive.responsive {
+		width: 100%;
+		height: 7em;
+		position: absolute;
+		top: -#{get-spacing(margin)};
+		bottom: auto;
+		
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		margin-top: 0;
+		background-color: white;
+		font-weight: 700;
+		
+		> a{
+			color: black;
+		}
+	}
+	.hide-mobile{
+		display: none;
+	}
+}
+.responsive {
+	@extend .navigation;
+}
+header > nav {
+	display: flex;
+	width: 100%;
+	height: 100%;
+
+	margin-top: 20px;
+	> a {
+		margin: 0 50px;
+		width: 5em;
+		@include phone {
+			margin: 0 auto;
+		}
+		img {
+			width: 100%;
+		}
+	}
+
+	.navigation {
+		display: flex;
+		@include phone {
+			display: none;
+		}
+		width: fit-content;
+		align-items: flex-start;
+		overflow: hidden;
+
+		> * {
+			margin-right: 40px;
+			color: white;
+			text-transform: lowercase;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			&:hover {
+				&:after {
+					position: relative;
+					content: "";
+					margin-top: 10px;
+					height: 2px;
+					width: 20px;
+					background-color: white;
+				}
+			}
+		}
+	}
+}
+
+//Main
+.screen-grid {
+	margin: 0;
+	width: 100%;
+	height: 100vh;
+	z-index: 1;
+
+	display: grid;
+	grid-template-rows: 65% 35%;
+	row-gap: 0;
+
+	@include phone {
+		display: flex;
+		flex-direction: column;
+	}
+
+	position: relative;
+}
+
+main > .slideshow {
+	width: 100%;
+	height: 100%;
+	position: relative;
+
+	> .slide {
+		display: none;
+		width: 100%;
+		height: 100%;
+		flex-direction: row;
+		@include phone {
+			flex-direction: column;
+		}
+		align-items: center;
+		justify-content: center;
+		animation: slider 0.3s ease-in-out 1;
+
+		> picture {
+			display: block;
+			height: 100%;
+			width: 60%;
+			@include phone {
+				width: 100%;
+				height: 400px;
+			}
+			> img {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		> .text {
+			width: 40%;
+			@include phone {
+				width: auto;
+				margin-top: 70px;
+			}
+			margin: 50px auto;
+			animation: text-slider 0.3s ease-in-out 1;
+
+			> * {
+				margin: 0 5% 50px;
+			}
+			> a {
+				font-weight: 500;
+				font-size: 14px;
+				text-transform: uppercase;
+				letter-spacing: get-spacing(word-spacing);
+			}
+			> a:hover {
+				opacity: 0.5;
+			}
+		}
+	}
+
+	> .navigation-arrows {
+		position: absolute;
+		left: 60%;
+		right: 0;
+		bottom: 0;
+		@include phone {
+			top: 341px;
+			left: auto;
+			right: 1px;
+		}
+
+		display: flex;
+		height: fit-content;
+		width: 10%;
+		min-width: 100px;
+
+		> button {
+			border: none;
+			padding: 0;
+			outline: none;
+			cursor: pointer;
+			height: fit-content;
+			width: 100%;
+			min-height: 30px;
+			min-width: 50px;
+
+			&:hover {
+				opacity: 0.7;
+			}
+			> img {
+				display: block;
+				height: auto;
+				width: 25%;
+				background-color: black;
+				padding: calc(50% - 12%);
+			}
+		}
+	}
+}
+
+footer {
+	display: flex;
+	@include phone {
+		flex-direction: column;
+		height: fit-content;
+
+		> * {
+			margin-top: 30px;
+		}
+	}
+
+	align-items: center;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+
+	> img {
+		width: 30%;
+		height: 100%;
+		@include phone {
+			width: 100%;
+		}
+	}
+	> .text {
+		width: calc(100% - 30% * 2 - 5%);
+		@include phone {
+			width: 90%;
+			margin-top: 30px;
+		}
+		margin: 10px auto;
+
+		> p {
+			font-size: 0.9rem;
+		}
+	}
+}
+
+@keyframes slider {
+	from {
+		opacity: 0.5;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes text-slider {
+	0% {
+		transform: scaleY(0);
+	}
+	100% {
+		transform: scaleY(1);
+	}
+}
