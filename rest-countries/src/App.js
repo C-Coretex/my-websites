@@ -8,39 +8,52 @@ import { Header } from './components/header.js'
 import { Search } from './components/search.js'
 
 function getRegions(countries) {
-  
   let regions = Object.entries(countries).map(countries => countries[1].region);
-  
+
   // Get rid from duplicates
   regions = [...new Set(regions)];
-  regions = regions.filter(region => region!=='')
-  
+  regions = regions.filter(region => region !== '')
+
   //Remove unused regions
   const index = regions.indexOf('Polar');
-  if(index !== -1)
+  if (index !== -1)
     regions.splice(index, 1);
-  
+
   return regions;
 }
 
 export default function App() {
 
-  const [countries, setCountry] = useState('');
+  const [currentRegion, setRegion] = useState('all')
+  const [countries, setCountries] = useState('');
+  const [regions, setRegions] = useState('');
   const uniqueKey = useRef(0);
 
+  //Default functions
   const uniqueKeyGenerator = () => {
     return uniqueKey.current = uniqueKey.current + 1;
   }
 
+  const handleRegionChange = (region) => {
+    if (region !== '')
+      setRegion(`region/${region}`)
+    else
+      setRegion('all')
+  }
+
+  //On load
   useEffect(() => {
     (async () => {
-      const response = await axios("https://restcountries.eu/rest/v2/all")
+      const response = await axios(`https://restcountries.eu/rest/v2/${currentRegion}?fields=flag;name;population;region;capital`)
       const data = await response.data
 
-      setCountry(data)
-      // console.log(data)
+      if (currentRegion === 'all')
+        setRegions(getRegions(data))
+
+      setCountries(data)
     })()
-  }, [])
+  }, [currentRegion])
+
 
   return (
     <div className="container">
@@ -50,10 +63,10 @@ export default function App() {
       <main>
         <div className="filter_bar">
           <Search />
-          {countries ? <Filter uniqueKeyGenerator={uniqueKeyGenerator} regions={getRegions(countries)} /> : <Filter regions={''}/>}
+          <Filter uniqueKeyGenerator={uniqueKeyGenerator} regions={regions} handleRegionChange={handleRegionChange} />
         </div>
         <div className="card_flex">
-          {Object.entries(countries).map(value => <Card key={uniqueKeyGenerator()} />)}
+          {Object.entries(countries).map(curCountry => <Card key={uniqueKeyGenerator()} country={curCountry[1]} />)}
         </div>
       </main>
     </div>

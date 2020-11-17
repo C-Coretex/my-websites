@@ -7,7 +7,7 @@ import styles from '../scss/components/filter.module.css'
 
 
 
-function Filter({ uniqueKeyGenerator, regions }) {
+function Filter({ uniqueKeyGenerator, regions, handleRegionChange }) {
 	const [isOpen, openAndClose] = useState(false);
 	const [selectedItems, changeItem] = useState({})
 
@@ -24,6 +24,8 @@ function Filter({ uniqueKeyGenerator, regions }) {
 		tempSelectedItem[item] = !selectedItems[item]
 
 		changeItem(tempSelectedItem);
+		
+		tempSelectedItem[item] === true ? handleRegionChange(item) : handleRegionChange('')
 	}
 	
 	function getSelectedItem() {
@@ -49,7 +51,7 @@ function Filter({ uniqueKeyGenerator, regions }) {
 				</div>
 				<div className={`${styles.option_list} no_decorate`}>
 					{Object.entries(selectedItems).map(region => {
-						return <Card key={uniqueKeyGenerator()} region={region[0]} selected={region[1]} onClickHandler={selectItem} />
+						return <Option key={uniqueKeyGenerator()} region={region[0]} selected={region[1]} onClickHandler={selectItem} />
 					}
 					)}
 				</div>
@@ -58,7 +60,7 @@ function Filter({ uniqueKeyGenerator, regions }) {
 	)
 }
 
-function Card({ region, selected = false, onClickHandler }) {
+function Option({ region, selected = false, onClickHandler }) {
 	return (
 		<div onClick={() => onClickHandler(region)} className={`${styles.option} ${selected ? styles.selected : ''}`}>
 			{region}
