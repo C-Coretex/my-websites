@@ -20,18 +20,23 @@ function Filter({ uniqueKeyGenerator, regions, handleRegionChange }) {
 		Object.entries(regions).forEach(region => {
 			tempSelectedItem[region[1]] = false
 		})
-		
+
 		tempSelectedItem[item] = !selectedItems[item]
 
 		changeItem(tempSelectedItem);
-		
-		tempSelectedItem[item] === true ? handleRegionChange(item) : handleRegionChange('')
+
+		if (tempSelectedItem[item] === true)
+			handleRegionChange(item)
+		else {
+			handleRegionChange('')
+			openAndClose(!isOpen)
+		}
 	}
-	
+
 	function getSelectedItem() {
 		return Object.keys(selectedItems).find(key => selectedItems[key] === true)
 	}
-	
+
 	useEffect(() => {
 		let tempSelectedItem = {}
 		Object.entries(regions).forEach(region => {
@@ -43,9 +48,9 @@ function Filter({ uniqueKeyGenerator, regions, handleRegionChange }) {
 	}, [regions])
 
 	return (
-		<div className={styles.container} onClick={() => openAndClose(!isOpen)}>
+		<div className={styles.container}>
 			<div className={`${styles.select} ${isOpen ? styles.open : ''}`}>
-				<div className={styles.select_trigger}>
+				<div className={styles.select_trigger} onClick={() => openAndClose(!isOpen)}>
 					<span>{getSelectedItem() ? getSelectedItem() : 'Filter by Region'}</span>
 					<div className={styles.arrow}></div>
 				</div>

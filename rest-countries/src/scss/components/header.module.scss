@@ -1,5 +1,7 @@
-*{
+> * {
 	margin: 0;
+
+	color: black;
 }
 
 .container{
@@ -7,4 +9,9 @@
 	background-color: white;
 	
 	box-shadow: 0 -4px 10px #b3b3b3;
+	
+	* {
+		text-decoration: none;
+		color: black;
+	}
 }

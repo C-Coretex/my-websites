@@ -7,6 +7,10 @@ import Filter from './components/filter.js'
 import { Header } from './components/header.js'
 import { Search } from './components/search.js'
 
+
+
+const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
 function getRegions(countries) {
   let regions = Object.entries(countries).map(countries => countries[1].region);
 
@@ -24,22 +28,51 @@ function getRegions(countries) {
 
 export default function App() {
 
-  const [currentRegion, setRegion] = useState('all')
+  const [currentRegion, setCurRegion] = useState('all')
   const [countries, setCountries] = useState('');
   const [regions, setRegions] = useState('');
   const uniqueKey = useRef(0);
+  const searchText = useRef('')
+  const [countriesFiltered, setFilteredCountries] = useState('');
 
   //Default functions
   const uniqueKeyGenerator = () => {
     return uniqueKey.current = uniqueKey.current + 1;
   }
 
+  function filter(name) {
+    setFilteredCountries(countries.filter((country) => {
+      return country.name.toLowerCase().includes(name.toLowerCase())
+    }))
+  }
+
+
   const handleRegionChange = (region) => {
     if (region !== '')
-      setRegion(`region/${region}`)
+      setCurRegion(`region/${region}`)
     else
-      setRegion('all')
+      setCurRegion('all')
   }
+
+  const handleSearchClick = (name) => {
+    searchText.current = name;
+    filter(searchText.current)
+  }
+
+  useEffect(() => {
+    if (!currentRegion.includes('region/'))
+      setRegions(getRegions(countriesFiltered))
+  }, [countriesFiltered])
+
+  useEffect(() => {
+    (async () => {
+      const response = await axios(`https://restcountries.eu/rest/v2/${currentRegion}?fields=flag;name;population;region;capital`)
+      const data = await response.data
+      
+      if(searchText.current === '')
+        setFilteredCountries(data)
+    })()
+  }, [currentRegion])
 
   //On load
   useEffect(() => {
@@ -47,12 +80,11 @@ export default function App() {
       const response = await axios(`https://restcountries.eu/rest/v2/${currentRegion}?fields=flag;name;population;region;capital`)
       const data = await response.data
 
-      if (currentRegion === 'all')
-        setRegions(getRegions(data))
-
+      setRegions(getRegions(data))
+      setFilteredCountries(data)
       setCountries(data)
     })()
-  }, [currentRegion])
+  }, [])
 
 
   return (
@@ -62,11 +94,11 @@ export default function App() {
       </header>
       <main>
         <div className="filter_bar">
-          <Search />
+          <Search handleSearchClick={handleSearchClick} />
           <Filter uniqueKeyGenerator={uniqueKeyGenerator} regions={regions} handleRegionChange={handleRegionChange} />
         </div>
         <div className="card_flex">
-          {Object.entries(countries).map(curCountry => <Card key={uniqueKeyGenerator()} country={curCountry[1]} />)}
+          {Object.entries(countriesFiltered).map(curCountry => <Card key={uniqueKeyGenerator()} country={curCountry[1]} />)}
         </div>
       </main>
     </div>

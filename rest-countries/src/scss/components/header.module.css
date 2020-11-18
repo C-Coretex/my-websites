@@ -1,2 +1,2 @@
-*{margin:0}.container{padding:20px 5%;background-color:white;box-shadow:0 -4px 10px #b3b3b3}
+>*{margin:0;color:black}.container{padding:20px 5%;background-color:white;box-shadow:0 -4px 10px #b3b3b3}.container *{text-decoration:none;color:black}
 /*# sourceMappingURL=header.module.css.map */
